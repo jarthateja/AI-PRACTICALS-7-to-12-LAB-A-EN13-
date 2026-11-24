@@ -1,0 +1,66 @@
+
+# Practical 12: Simple AI Learning Model Using k-NN
+
+from sklearn.neighbors import KNeighborsClassifier
+
+# Create training data
+X_train = [
+    [1, 1],
+    [2, 2],
+    [3, 2],
+    [6, 5],
+    [7, 6],
+    [8, 7]
+]
+
+y_train = [
+    "Fail",
+    "Fail",
+    "Fail",
+    "Pass",
+    "Pass",
+    "Pass"
+]
+
+# Create and train the model
+model = KNeighborsClassifier(n_neighbors=3)
+model.fit(X_train, y_train)
+
+# Create test data
+X_test = [
+    [2, 1],
+    [3, 3],
+    [6, 6],
+    [7, 5]
+]
+
+# Actual results
+actual = [
+    "Fail",
+    "Fail",
+    "Pass",
+    "Pass"
+]
+
+# Make predictions
+predicted = model.predict(X_test)
+
+print("Predictions:", predicted)
+
+# Compare actual and predicted results
+print("\nComparison:")
+
+for i in range(len(actual)):
+    print("Actual:", actual[i], "| Predicted:", predicted[i])
+
+# Calculate accuracy
+correct = 0
+
+for i in range(len(actual)):
+    if actual[i] == predicted[i]:
+        correct = correct + 1
+
+accuracy = correct / len(actual)
+
+print("\nAccuracy:", accuracy)
+print("Accuracy Percentage:", accuracy * 100, "%")
