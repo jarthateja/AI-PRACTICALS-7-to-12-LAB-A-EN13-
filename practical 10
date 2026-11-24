@@ -1,74 +1,74 @@
 
-# Practical 9: Simple STRIPS / Goal-Stack Planning
+# Practical 10: Value Iteration in a Simple Grid World
 
-# Step 1: Define Initial State and Goal
-initial_state = {"At_A"}
-goal = "At_C"
+# Store states and possible actions
+transitions = {
+    'A': {'Right': 'B', 'Down': 'C'},
+    'B': {'Left': 'A', 'Down': 'G'},
+    'C': {'Up': 'A', 'Right': 'G'},
+    'G': {}
+}
 
-# Step 2: Define STRIPS Actions
-actions = [
-    {
-        "name": "Move A to B",
-        "pre": {"At_A"},
-        "add": {"At_B"},
-        "delete": {"At_A"}
-    },
-    {
-        "name": "Move B to C",
-        "pre": {"At_B"},
-        "add": {"At_C"},
-        "delete": {"At_B"}
-    }
-]
+# Rewards for each state
+rewards = {
+    'A': -1,
+    'B': -1,
+    'C': -1,
+    'G': 10
+}
 
-# Step 3: Find an Action That Can Achieve a Goal
-def find_action(goal):
-    for action in actions:
-        if goal in action["add"]:
-            return action
-    return None
+# Discount factor
+gamma = 0.9
 
-# Step 4: Goal-Stack Planner
-def make_plan(goal, state, plan):
+# Initialize values
+values = {
+    'A': 0,
+    'B': 0,
+    'C': 0,
+    'G': 0
+}
 
-    # Check if goal is already true
-    if goal in state:
-        return True
+print("Initial Values:")
+print(values)
 
-    # Find an action to achieve the goal
-    action = find_action(goal)
+# Perform Value Iteration
+for i in range(5):
+    new_values = values.copy()
 
-    if action is None:
-        return False
+    for state in ['A', 'B', 'C']:
+        possible_values = []
 
-    # Achieve action preconditions
-    for condition in action["pre"]:
-        if not make_plan(condition, state, plan):
-            return False
+        for action, next_state in transitions[state].items():
+            value = rewards[next_state] + gamma * values[next_state]
+            possible_values.append(value)
 
-    # Perform the action
-    state.difference_update(action["delete"])
-    state.update(action["add"])
+        new_values[state] = max(possible_values)
 
-    plan.append(action["name"])
+    values = new_values
 
-    return True
+print("\nFinal Values:")
+print(values)
 
-# Step 5: Generate the Plan
-state = initial_state.copy()
-plan = []
+# Find the best policy
+policy = {}
 
-success = make_plan(goal, state, plan)
+for state in ['A', 'B', 'C']:
+    best_action = None
+    best_value = -100
 
-# Step 6: Display the Result
-if success:
-    print("Initial State:", initial_state)
-    print("Goal State:", goal)
-    print("\nPlan:")
-    for step in plan:
-        print(step)
+    for action, next_state in transitions[state].items():
+        value = rewards[next_state] + gamma * values[next_state]
 
-    print("\nFinal State:", state)
-    print("Goal Achieved Successfully!")
-else:
-    print("No plan found!")
+        if value > best_value:
+            best_value = value
+            best_action = action
+
+    policy[state] = best_action
+
+print("\nBest Policy:")
+print(policy)
+
+# Display recommended actions
+print("\nRecommended Actions:")
+for state, action in policy.items():
+    print("From", state, "choose", action)
