@@ -1,0 +1,49 @@
+
+from sklearn.naive_bayes import BernoulliNB
+
+# Create training dataset
+# Symptoms: Fever, Cough, Fatigue
+
+X = [
+    [1, 1, 1],
+    [1, 1, 0],
+    [1, 0, 1],
+    [0, 1, 0],
+    [0, 1, 1],
+    [0, 0, 0]
+]
+
+# Diagnosis labels
+y = [
+    'Flu',
+    'Flu',
+    'Flu',
+    'Cold',
+    'Cold',
+    'Cold'
+]
+
+# Create and train Naive Bayes model
+model = BernoulliNB()
+model.fit(X, y)
+
+# Predict diagnosis for first patient
+patient = [[1, 1, 1]]
+
+prediction = model.predict(patient)
+
+print("Patient 1 Predicted Diagnosis:", prediction[0])
+
+# Perform probabilistic inference
+probabilities = model.predict_proba(patient)
+
+print("\nDiagnosis Probabilities:")
+for diagnosis, probability in zip(model.classes_, probabilities[0]):
+    print(diagnosis, "=", round(probability, 2))
+
+# Predict diagnosis for second patient
+patient2 = [[0, 1, 0]]
+
+prediction2 = model.predict(patient2)
+
+print("\nPatient 2 Predicted Diagnosis:", prediction2[0])
