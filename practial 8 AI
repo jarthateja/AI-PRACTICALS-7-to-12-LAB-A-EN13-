@@ -1,0 +1,67 @@
+
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.naive_bayes import MultinomialNB
+
+# Step 1: Create training dataset
+messages = [
+    "Win a free prize now",
+    "Claim your free reward",
+    "Congratulations you won cash",
+    "Get a special offer today",
+    "Please attend the meeting tomorrow",
+    "Can we meet after class",
+    "Your assignment is due Friday",
+    "Please please send me the notes"
+]
+
+labels = [
+    "Spam",
+    "Spam",
+    "Spam",
+    "Spam",
+    "Not Spam",
+    "Not Spam",
+    "Not Spam",
+    "Not Spam"
+]
+
+# Step 2: Convert text into numbers
+vectorizer = CountVectorizer()
+X = vectorizer.fit_transform(messages)
+
+print("Vocabulary:", vectorizer.vocabulary_)
+print("\nNumerical Data:")
+print(X.toarray())
+
+# Step 3: Train the classifier
+model = MultinomialNB()
+model.fit(X, labels)
+
+print("\nModel trained successfully!")
+
+# Step 4: Test the AI application
+new_message = ["Win cash today"]
+new_X = vectorizer.transform(new_message)
+
+prediction = model.predict(new_X)
+
+print("\nMessage:", new_message[0])
+print("Prediction:", prediction[0])
+
+# Step 5: Take user input
+user_message = input("\nEnter a message: ")
+
+user_X = vectorizer.transform([user_message])
+prediction = model.predict(user_X)
+
+print("Prediction:", prediction[0])
+
+# Step 6: Display ethics and explainability
+print("\nEthics Considerations:")
+print("1. Wrong predictions may occur.")
+print("2. Biased training data can affect results.")
+print("3. User messages must be kept private.")
+
+print("\nExplainability:")
+print("The model learns from words in training messages.")
+print("Words like win, free, reward and cash may indicate Spam.")
