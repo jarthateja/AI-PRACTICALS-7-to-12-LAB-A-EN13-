@@ -1,0 +1,35 @@
+
+# Practical 11: Propositional Logic and Logical Inference
+
+# Store initial facts
+facts = {"raining"}
+
+print("Initial facts:", facts)
+
+# Store logical rules
+rules = {
+    "raining": "road_wet",
+    "road_wet": "drive_carefully",
+    "drive_carefully": "reduce_speed"
+}
+
+# Perform logical inference using forward chaining
+changed = True
+
+while changed:
+    changed = False
+
+    for condition, conclusion in rules.items():
+        if condition in facts and conclusion not in facts:
+            facts.add(conclusion)
+            changed = True
+
+# Display final conclusions
+print("\nFacts after inference:")
+
+for fact in ["raining", "road_wet",
+             "drive_carefully", "reduce_speed"]:
+    if fact in facts:
+        print(fact)
+
+print("\nLogical inference completed successfully!")
